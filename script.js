@@ -54,8 +54,74 @@ const questions = [
 /*************************/
 /* Contenu du DOM chargé */
 /*************************/
+console.log("script quiz chargé")
+
+let question = document.querySelector("#question");
+let reponses = document.querySelector("#answers");
+let questionActuelle = 0;
+let score = 0;
+let bonneReponseIndex = questions[questionActuelle].correctAnswerIndex;
+let bonneReponse = questions[questionActuelle].answers[bonneReponseIndex];
+
+
 document.addEventListener("DOMContentLoaded", () => {
   
 // démarrage du quizz
+console.log(questions)
+
+genererQuestion()
+function genererQuestion() {
+  question.innerText = questions[questionActuelle].question;
+  bonneReponseIndex = questions[questionActuelle].correctAnswerIndex;
+  bonneReponse = questions[questionActuelle].answers[bonneReponseIndex];
+      for (let i=0; i < questions[questionActuelle].answers.length; i++) {
+        // console.log(questions[questionActuelle].answers[i])
+        let reponse = document.createElement("li");
+        reponse.classList.add("answer");
+        reponse.innerText = questions[questionActuelle].answers[i]
+        reponses.appendChild(reponse)
+    }
+  console.log("Index Bonne reponse", bonneReponseIndex)
+  console.log(bonneReponse)
+}
+
+function afficherScore() {
+  let cadreScore = document.querySelector("#score")
+  cadreScore.innerText = score
+}
+
+function questionSuivante () {
+      reponses.innerHTML = "";
+
+  if (questionActuelle < questions.length - 1) {
+        questionActuelle++;
+        genererQuestion();
+        afficherScore();
+    } else {
+        question.innerText = "";
+        question.innerHTML = `Merci d'avoir participé à ce quiz, votre score est de ${score} bonnes réponses sur 4 !`
+        reponses.remove();
+        afficherScore();
+  }
+}
+
+
+reponses.addEventListener("click", (event) => {
+  let reponseChoisie = event.target.innerText
+  console.log(reponseChoisie)
+
+  if (reponseChoisie == bonneReponse) {
+    console.log("c'est gagné")
+    score++;
+    console.log("score", score)
+    console.log("question actuelle", questionActuelle)
+    questionSuivante()
+  } else {
+    questionSuivante()
+  }
+
+})
   
+
+
 });
